@@ -27,3 +27,12 @@ endProgram:
 	syscall 
 	li $v0, 10 # Exit program system call.
 	syscall
+	
+
+# REMOVE LEADING SPACES #
+removeLeading:
+	la $s0, userNumber # The address of the string the user entered.
+	add $t0, $t0, $zero # $t0 will iterate over each character.
+rLLoop:
+	add $s1, $s0, $t0 # message[i]
+	lb $s2, 0($s1) # Load the character at message[i] into $s2.
