@@ -34,26 +34,26 @@ endProgram:
 
 # REMOVE LEADING SPACES #
 removeLeading:
-	la $s0, userString # The address of the string the user entered.
-	la $s7, newString # The address of our new string.
-	add $t0, $zero, $zero # $t0 will iterate over each character (message[i]).
-	add $t1, $zero, $zero # $ t1 is our current position in the new string (newMessage[j]).
-	add $t2, $zero, $zero # $t2 is if we hit a character other than space.
+	la $t0, userString # message address.
+	la $t1, newString # newMessage address.
+	add $t2, $zero, $zero # i.
+	add $t3, $zero, $zero # h.
+	add $t4, $zero, $zero # hitCharacter. Defaults to false (0).
 rLLoop:
-	add $s1, $s0, $t0 # message[i]
-	add $s6, $s7, $t1 # newMessage[i]
-	lb $s2, 0($s1) # Load the character at message[i] into $s2.
-	beq $s2, 0, rLLoopEnd # End of string, exit out.
-	beq $t2, 1, rLLoopOther # Skip space logic if we're done with it.
-	bne $s2, 32, rLLoopOther # It's not a space, skip the space logic.
+	add $t5, $t0, $t2 # message[i].
+	add $t6, $t1, $t3 # newMessage[h].
+	lb $t7, 0($t5) # The character at message[i].
+	beq $t7, 0, rLLoopEnd # message[i] = null, end of string.
+	beq $t4, 1, rLLoopOther # hitCharacter == true, ignore our space logic.
+	bne $t7, 32, rLLoopOther # message[i] != ' ', ignore our space logic.
 rLLoopSpace:
-	addi $t0, $t0, 1 # i++
+	addi $t2, $t2, 1 # i++.
 	j rLLoop
 rLLoopOther:
-	addi $t2, $zero, 1 # We hit a character.
-	sb $s2, 0($s6) # newMessage[j] = message[i]
-	addi $t1, $t1, 1 # j++
-	addi $t0, $t0, 1 # i++
+	addi $t4, $zero, 1 # hitCharacter = true (1).
+	sb $t7, 0($t6) # newMessage[h] = message[i]
+	addi $t3, $t3, 1 # h++.
+	addi $t2, $t2, 1 # i++.
 	j rLLoop
 rLLoopEnd:
 	li $v0, 4 # Printing new line.
