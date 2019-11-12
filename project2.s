@@ -33,10 +33,15 @@ endProgram:
 # REMOVE LEADING SPACES #
 removeLeading:
 	la $s0, userString # The address of the string the user entered.
-	add $t0, $t0, $zero # $t0 will iterate over each character.
+	add $t0, $zero, $zero # $t0 will iterate over each character.
+	add $t1, $zero, $zero # $t1 is our current position in the new string.
+	add $t2, $zero, $zero # $t2 is if we hit a character other than space.
 rLLoop:
 	add $s1, $s0, $t0 # message[i]
 	lb $s2, 0($s1) # Load the character at message[i] into $s2.
 	beq $s2, 0, rLLoopEnd # End of string, exit out.
+	bne $s2, 32, rLLoopOther # It's a character, skip the space logic.
+RLLoopOther:
+	addi $t2, $t2, 1 # We hit a character.
 rLLoopEnd:
 	jr $ra # Return to where we were in the main loop.
