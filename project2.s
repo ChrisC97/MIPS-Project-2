@@ -41,11 +41,14 @@ rLLoop:
 	lb $s2, 0($s1) # Load the character at message[i] into $s2.
 	beq $s2, 0, rLLoopEnd # End of string, exit out.
 	beg $t2, 1, rLLoopOther # We dealt with the leading spaces, just copy the characters.
-	bne $s2, 32, rLLoopOther # It's a character, skip the space logic.
+	bne $s2, 32, rLLoopOther # It's not a space, skip the space logic.
 rLLoopSpace:
-	
+	addi $t0, $t0, 1 # i++
+	j rLLoop
 rLLoopOther:
 	addi $t2, $zero, 1 # We hit a character.
-	sb $s2, 0($s1) # newMessage[j] = newMessage[i]
+	sb $s2, 0($s1) # newMessage[j] = message[i]
+	addi $t0, $t0, 1 # i++
+	j rLLoop
 rLLoopEnd:
 	jr $ra # Return to where we were in the main loop.
