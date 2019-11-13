@@ -25,6 +25,10 @@ main:
 	jal removeLeading
 	jal replaceString
 	jal removeTrailing
+
+	slt $t0, $s0, 5 # characterCount < 5?
+	beq $t0, 0, printInvalid # characterCount > 5, invalid.
+	j endProgram
 	
 	# PRINT INVALID
 printInvalid:
