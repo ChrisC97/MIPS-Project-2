@@ -34,6 +34,14 @@ endProgram:
 	
 # REPLACE STRING #
 replaceString:
+	la $t0, userString # message address.
+	la $t1, tempString # tempMessage address.
+	add $t2, $zero, $zero # i.
+rSLoop:
+	add $t5, $t0, $t2 # message[i].
+	add $t6, $t1, $t2 # tempMessage[i].
+	lb $t7, 0($t6) # The character at tempMessage[i].
+	sb $t7, 0($t5) # message[i] = tempMessage[i]
 	
 # REMOVE LEADING SPACES #
 removeLeading:
