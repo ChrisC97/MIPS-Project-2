@@ -38,10 +38,22 @@ replaceString:
 	la $t1, tempString # tempMessage address.
 	add $t2, $zero, $zero # i.
 rSLoop:
-	add $t5, $t0, $t2 # message[i].
-	add $t6, $t1, $t2 # tempMessage[i].
+	add $t5, $t0, $t2 # message[i] address.
+	add $t6, $t1, $t2 # tempMessage[i] address.
 	lb $t7, 0($t6) # The character at tempMessage[i].
-	sb $t7, 0($t5) # message[i] = tempMessage[i]
+	sb $t7, 0($t5) # message[i] = tempMessage[i].
+	sb $zero, 0($t6) # tempMessage[i] = 0
+ 	addi $t2, $t2, 1 # i++.
+	beq $t2, 1002, rSLoopEnd # i == 1002, end of string.
+	j rSLoop
+rSLoopEnd:
+	li $v0, 4 # Printing new line.
+	la $a0, newLine
+	syscall 
+	li $v0, 4 # Printing the new string
+	la $a0, userString
+	syscall 
+	jr $ra # Return to where we were in the main loop.
 	
 # REMOVE LEADING SPACES #
 removeLeading:
@@ -72,12 +84,6 @@ rLLoopLCIndex:
 	add $t8, $zero, $t3 # lastCharacterIndex = h.
 	j rLLoop
 rLLoopEnd:
-	li $v0, 4 # Printing new line.
-	la $a0, newLine
-	syscall 
-	li $v0, 4 # Printing the new string
-	la $a0, tempString
-	syscall 
 	jr $ra # Return to where we were in the main loop.
 	
 # REMOVE TRAILING 
