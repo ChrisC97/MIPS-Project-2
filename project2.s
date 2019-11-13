@@ -90,11 +90,14 @@ rLLoopEnd:
 # REMOVE TRAILING SPACES #
 removeTrailing:
 	la $t0, userString # message address.
-	addi $t8, $t8, 1 # lastCharacterIndex += 1; We want the space right after the last character.
-	add $t1, $t0, $t8 # message[lastCharacterIndex].
-	add $t2, $zero, $zero # 0, aka null or the end of a string.
+	addi $t8, $t8, 1 # lastCharacterIndex += 1. We want the space right after the last character.
+	add $t2, $zero, $zero # 0, null/the end of a string.
+	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
 rTLoop:
+	add $t1, $t0, $t8 # message[lastCharacterIndex].
 	sb $t2, 0($t1) # message[lastCharacterIndex] = null.
 	addi $t8, $t8, 1 # lastCharacterIndex++.
+	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
+	j rTLoop
 rTEnd:
 	jr $ra
