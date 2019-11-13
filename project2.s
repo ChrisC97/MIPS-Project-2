@@ -1,6 +1,7 @@
 .data
 	base: .word 33
 	sr1: .asciiz "Enter up to 1000 characters: "
+	sr2: .asciiz "Invalid Input"
 	newLine: .asciiz "\n"
 	userString: .space 1001 #1000 characters
 	tempString: .space 1001 
@@ -25,6 +26,11 @@ main:
 	jal replaceString
 	jal removeTrailing
 	
+	# PRINT INVALID
+printInvalid:
+	li $v0, 4
+	la $a0, sr2
+	syscall 
 	# END OF PROGRAM #
 endProgram:
 	li $v0, 4 # Printing new line.
@@ -90,6 +96,7 @@ rLLoopEnd:
 # REMOVE TRAILING SPACES #
 removeTrailing:
 	la $t0, userString # message address.
+	add $s0, $zero, $t8 # characterCount = lastCharacterIndex. Used later.
 	addi $t8, $t8, 1 # lastCharacterIndex += 1. We want the space right after the last character.
 	add $t2, $zero, $zero # 0, null/the end of a string.
 	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
