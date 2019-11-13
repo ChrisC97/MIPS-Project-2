@@ -23,6 +23,7 @@ main:
 	
 	jal removeLeading
 	jal replaceString
+	jal removeTrailing
 	
 	# END OF PROGRAM #
 endProgram:
@@ -86,4 +87,7 @@ rLLoopLCIndex:
 rLLoopEnd:
 	jr $ra # Return to where we were in the main loop.
 	
-# REMOVE TRAILING 
+# REMOVE TRAILING SPACES #
+removeTrailing:
+	la $t0, userString # message address.
+	la $t1, tempString # newMessage address.
