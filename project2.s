@@ -101,6 +101,7 @@ rLLoopEnd:
 removeTrailing:
 	la $t0, userString # message address.
 	add $s0, $zero, $t8 # characterCount = lastCharacterIndex. Used later.
+	addi $s0, $s0, -1 # lastCharacterIndex ends on a null character, which we don't want to count as a character.
 	addi $t8, $t8, 1 # lastCharacterIndex += 1. We want the space right after the last character.
 	add $t2, $zero, $zero # 0, null/the end of a string.
 	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
