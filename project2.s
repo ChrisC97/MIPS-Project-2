@@ -3,7 +3,7 @@
 	sr1: .asciiz "Enter up to 1000 characters: "
 	newLine: .asciiz "\n"
 	userString: .space 1001 #1000 characters
-	newString: .space 1001 
+	tempString: .space 1001 
 	
 .text # Instructions section, goes in text segment.
 
@@ -22,6 +22,7 @@ main:
 	syscall
 	
 	jal removeLeading
+	jal replaceString
 	
 	# END OF PROGRAM #
 endProgram:
@@ -31,11 +32,13 @@ endProgram:
 	li $v0, 10 # Exit program system call.
 	syscall
 	
-
+# REPLACE STRING #
+replaceString:
+	
 # REMOVE LEADING SPACES #
 removeLeading:
 	la $t0, userString # message address.
-	la $t1, newString # newMessage address.
+	la $t1, tempString # newMessage address.
 	add $t2, $zero, $zero # i.
 	add $t3, $zero, $zero # h.
 	add $t4, $zero, $zero # hitCharacter. Defaults to false (0).
@@ -65,6 +68,8 @@ rLLoopEnd:
 	la $a0, newLine
 	syscall 
 	li $v0, 4 # Printing the new string
-	la $a0, newString
+	la $a0, tempString
 	syscall 
 	jr $ra # Return to where we were in the main loop.
+	
+# REMOVE TRAILING 
