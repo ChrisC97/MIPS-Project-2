@@ -27,7 +27,9 @@ main:
 	jal removeTrailing
 
 	slt $t0, $s0, 5 # characterCount < 5?
-	beq $t0, 0, printInvalid # characterCount > 5, invalid.
+	beq $t0, 0, printInvalid # characterCount >= 5, invalid.
+	slt $t0, $s0, 1 # characterCount < 1?
+	beq $t0, 1, printInvalid # characterCount < 1, invalid.
 	j endProgram
 	
 	# PRINT INVALID
@@ -35,6 +37,7 @@ printInvalid:
 	li $v0, 4
 	la $a0, sr2
 	syscall 
+	
 	# END OF PROGRAM #
 endProgram:
 	li $v0, 4 # Printing new line.
@@ -89,7 +92,7 @@ rLLoopOther:
 	sb $t7, 0($t6) # newMessage[h] = message[i]
 	addi $t3, $t3, 1 # h++.
 	addi $t2, $t2, 1 # i++.
-	bne $t7, 32, rLLoopLCIndex # mesage[i] != ' ', need to keep track of this position.
+	bne $t7, 32, rLLoopLCIndex # message[i] != ' ', need to keep track of the h position.
 	j rLLoop
 rLLoopLCIndex:
 	add $t8, $zero, $t3 # lastCharacterIndex = h.
@@ -102,11 +105,10 @@ removeTrailing:
 	la $t0, userString # message address.
 	add $s0, $zero, $t8 # characterCount = lastCharacterIndex. Used later.
 	addi $s0, $s0, -1 # lastCharacterIndex ends on a null character, which we don't want to count as a character.
-	addi $t8, $t8, 1 # lastCharacterIndex += 1. We want the space right after the last character.
 	add $t2, $zero, $zero # 0, null/the end of a string.
 	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
 rTLoop:
-	add $t1, $t0, $t8 # message[lastCharacterIndex].
+	add $t1, $t0, $t8 # message[lastCharacterIndex] address.
 	sb $t2, 0($t1) # message[lastCharacterIndex] = null.
 	addi $t8, $t8, 1 # lastCharacterIndex++.
 	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
