@@ -50,9 +50,6 @@ printInvalid:
 	
 	# END OF PROGRAM #
 endProgram:
-	li $v0, 4 # Printing new line.
-	la $a0, newLine
-	syscall 
 	li $v0, 10 # Exit program system call.
 	syscall
 	
@@ -118,12 +115,6 @@ rSLoop:
 	beq $t2, 1002, rSLoopEnd # i == 1002, end of string.
 	j rSLoop
 rSLoopEnd:
-	li $v0, 4 # Printing new line.
-	la $a0, newLine
-	syscall 
-	li $v0, 4 # Printing the new string
-	la $a0, userString
-	syscall 
 	jr $ra # Return to where we were in the main loop.
 	
 # REMOVE LEADING SPACES #
