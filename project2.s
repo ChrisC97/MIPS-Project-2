@@ -51,6 +51,11 @@ endProgram:
 	
 # CALCULATE RESULT #
 calcResult:	
+	add $t0, $t0, $zero # $t0 will iterate over the characters.
+cRLoop:
+	add $s1, $s0, $t0 # mesage[i] address.
+	lb $s2, 0($s1) # Load the character into $s2.
+	beq $s2, 0, cRLoopEnd # End of string, exit out.
 
 # REPLACE STRING #
 replaceString:
