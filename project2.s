@@ -4,6 +4,7 @@
 	sr2: .asciiz "Invalid Input"
 	newLine: .asciiz "\n"
 	userString: .space 1001 #1000 characters
+	uSCount: .word 0
 	tempString: .space 1001 
 	
 .text # Instructions section, goes in text segment.
@@ -53,7 +54,8 @@ endProgram:
 calcResult:	
 	addiu $sp, $sp, -4
 	sw $ra, ($sp) # Save $ra on the stack for when we want to return.
-	add $t0, $t0, $zero # i.
+	add $t0, $zero, $zero # i.
+	lw $t6, base # base.
 	add $s5, $s5, $zero # result = 0.
 cRLoop:
 	add $s1, $s0, $t0 # mesage[i] address.
@@ -65,7 +67,7 @@ cRLoop:
 	add $s5, $s5, $s2 # result += value.
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
-	j messageLoop # Check the next character.
+	j cRLoop # Check the next character.
 cREnd:
 	lw $ra, ($sp) # Load the address from the stack.
 	addiu $sp, $sp, 4
