@@ -65,21 +65,23 @@ calcResult:
 	addi $t2, $t2, -1 # Our power is one less than charCount.
 	add $s7, $zero, $zero # finalResult = 0.
 cRLoop:
-	blt, $t2, $t0, cREnd # i > charCount, exit out.
+	blt, $t2, $zero, cREnd # power < 0, exit out.
 	add $t3, $s0, $t0 # message[i] address.
 	lb $s3, 0($t3) # Character at message[i].
 	beq $s3, 0, cREnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	bgt $s3, $t1, cRErrorEnd # If the number is larger than our base, Print an error.
+	
 	# Calculation
 	add $s4, $zero, $t1 # Base.
 	add $s5, $zero, $t2 # Power.
 	jal powerFunct
-	add $s7, $s3, $s7 # finalResult += powerResult.
+	add $s7, $s7, $s6 # finalResult += powerResult.
+	
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
-	#addi $t2, $t2, -1 # power--
+	addi $t2, $t2, -1 # power--
 	j cRLoop # Check the next character.
 cRErrorEnd:
 	addi $t7, $zero, -1 # Any error we get sets the character count to -1.
@@ -94,12 +96,23 @@ powerFunct:
 	add $t8, $zero, $zero # i.
 	addi $t8, $t8, 1 # add 1 to i once.
 	add $s6, $zero, $s4 # powerResult = base.
+	blt, $s5, 1, pFEndOne # power < 1, just set result to 1.
+	blt, $s5, 2, pFEnd # power < 2, just return the number.
 pFLoop:
-	mult $s3, $s4 # powerResult * base
-	mflo $s3 # powerResult = powerResult * base.
+	mult $s6, $s4
+	mflo $s6 # powerResult = powerResult * base.
 	addi, $t8, $t8, 1 # i++.
 	blt $t8, $s5, pFLoop # i < power, keep looping.
+	j pFEnd
+pFEndOne:
+	addi $s6, $zero, 1
 pFEnd:
+	li $v0, 1 # Printing result
+	add $a0, $zero, $s6 # Set a0 to the result.
+	syscall 
+	li $v0, 4 # System call to print a string.
+	la $a0, newLine # Load string to be printed.
+	syscall # Print string.
 	jr $ra
 	
 # CHECK IF CHAR IN RANGE #
