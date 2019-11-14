@@ -52,16 +52,23 @@ endProgram:
 # CALCULATE RESULT #
 calcResult:	
 	addiu $sp, $sp, -4
-	sw $ra, 0($sp) # Save $ra on the stack for when we want to return.
-	add $t0, $t0, $zero # $t0 will iterate over the characters.
+	sw $ra, ($sp) # Save $ra on the stack for when we want to return.
+	add $t0, $t0, $zero # i.
+	add $s5, $s5, $zero # result = 0.
 cRLoop:
 	add $s1, $s0, $t0 # mesage[i] address.
 	lb $s2, 0($s1) # Load the character into $s2.
-	beq $s2, 0, cRLoopEnd # End of string, exit out.
+	beq $s2, 0, cREnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
+	bgt $s2, $t6, messageLoopEnd # If the number is larger than our base, ignore it.
+	add $s5, $s5, $s2 # result += value.
 cRLoopEnd:
-	lw $ra, 0($sp) # Load the address from the stack.
+	addi $t0, $t0, 1 # i++
+	j messageLoop # Check the next character.
+cREnd:
+	lw $ra, ($sp) # Load the address from the stack.
 	addiu $sp, $sp, 4
+	jr $ra
 	
 # CONVERT TO UPPERCASE #
 toUppercase: # Convert characters to their uppercase version.
