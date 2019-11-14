@@ -100,14 +100,19 @@ rLLoopEnd:
 findCharCount:
 	la $t0, userString # message address.
 	add $t1, $zero, $zero # i.
-	add $t8, $zero, $zero # charCount = 0.
+	add $s7, $zero, $zero # charCount = 0.
 fCLoop:
 	add $t2, $t0, $t1 # message[i].
 	lb $t3, 0($t2) # The character at message[i].
-	beq $t0, 1002, fCEnd # i == 1002, end of string.
+	beq $t1, 1002, fCEnd # i == 1002, end of string.
+	slt $t4, $t3, 33 # message[i] < '!'?
+	beq $t4, 1, fCLoopEnd # message[i] <= ' ', loop again.
+	add $s7, $zero, $t1 # charCount = i.
 fCLoopEnd:
+	addi $t1, $t1, 1 # i++.
 	j fCLoop
 fCEnd:
+	addi $s7, $s7, 1 # the number of characters is i+1.
 	jr $ra
 	
 # REMOVE TRAILING SPACES #
