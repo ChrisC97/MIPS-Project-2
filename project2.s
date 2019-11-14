@@ -24,6 +24,7 @@ main:
 	
 	jal removeLeading
 	jal replaceString
+	jal findCharCount
 	#jal removeTrailing
 
 	slt $t0, $s0, 5 # characterCount < 5?
@@ -94,6 +95,12 @@ rLLoopOther:
 	j rLLoop
 rLLoopEnd:
 	jr $ra # Return to where we were in the main loop.
+	
+# FIND LAST CHARACTER INDEX #
+findCharCount:
+	add $t8, $zero, $zero # charCount = 0.
+fCLoop:
+	
 	
 # REMOVE TRAILING SPACES #
 removeTrailing:
