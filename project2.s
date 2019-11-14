@@ -98,9 +98,14 @@ rLLoopEnd:
 	
 # FIND LAST CHARACTER INDEX #
 findCharCount:
+	la $t0, userString # message address.
 	add $t8, $zero, $zero # charCount = 0.
+	add $t0, $zero, $zero # i.
 fCLoop:
-	
+	add $t5, $t0, $t2 # message[i].
+	beq $t0, 1002, fCEnd # i == 1002, end of string.
+fCEnd:
+	jr $ra
 	
 # REMOVE TRAILING SPACES #
 removeTrailing:
