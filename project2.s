@@ -69,10 +69,11 @@ cRLoop:
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	bgt $s2, $t6, cRErrorEnd # If the number is larger than our base, Print an error.
-	add $s0, $zero, $t6 # base.
+	add $s4, $zero, $t6 # base.
 	add $s6, $zero, $t5 # power.
-	jal powerFunct
-	add $s5, $s5, $s2 # result += value.
+	#jal powerFunct
+	#add $s5, $s5, $s3 # result += value.
+	addi $t5, $t5, -1
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
 	j cRLoop # Check the next character.
@@ -88,8 +89,14 @@ cREnd:
 powerFunct:
 	add $t8, $zero, $zero # i.
 	addi $t8, $t8, 1
+	add $s3, $zero, $s4
 pFLoop:
-	mult $s0, $s0 # base * base
+	mult $s3, $s4 # base * base
+	mflo $s3 # Store in s3.
+	addi, $t8, $t8, 1 # i++
+	blt $t8, $s6, pFLoop # iterator is less than the lower, keep looping.
+pFEnd:
+	jr $ra
 	
 # CHECK IF CHAR IN RANGE #
 isCharInRange:
