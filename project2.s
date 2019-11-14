@@ -35,6 +35,7 @@ main:
 	la $s0, userString # message address.
 	jal calcResult
 	
+	lw $s0, charCount
 	slt $t0, $s0, 1 # characterCount < 1?
 	beq $t0, 1, printInvalid # characterCount < 1, invalid.
 	
@@ -72,13 +73,13 @@ cRLoop:
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	bgt $s3, $t1, cRErrorEnd # If the number is larger than our base, Print an error.
-	
 	# Calculation
 	add $s4, $zero, $t1 # Base.
 	add $s5, $zero, $t2 # Power.
 	jal powerFunct
+	mult $s3, $s6 # x * (base^(power))
+	mflo $s6 # powerResult = x * (base^(power))
 	add $s7, $s7, $s6 # finalResult += powerResult.
-	
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
 	addi $t2, $t2, -1 # power--
@@ -107,12 +108,6 @@ pFLoop:
 pFEndOne:
 	addi $s6, $zero, 1
 pFEnd:
-	li $v0, 1 # Printing result
-	add $a0, $zero, $s6 # Set a0 to the result.
-	syscall 
-	li $v0, 4 # System call to print a string.
-	la $a0, newLine # Load string to be printed.
-	syscall # Print string.
 	jr $ra
 	
 # CHECK IF CHAR IN RANGE #
