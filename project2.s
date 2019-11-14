@@ -60,11 +60,12 @@ calcResult:
 	add $t0, $zero, $zero # i.
 	lw $t1, base # base.
 	lw $t2, charCount # power = charCount. used for calc.
-	addi $t3, $t3, -1 # Our power is one less than charCount.
+	addi $t2, $t2, -1 # Our power is one less than charCount.
 	add $s1, $zero, $zero # result = 0.
 cRLoop:
-	add $s2, $s0, $t0 # message[i] address.
-	lb $s3, 0($s2) # Character at message[i].
+	blt, $t2, $t0, cREnd
+	add $t3, $s0, $t0 # message[i] address.
+	lb $s3, 0($t3) # Character at message[i].
 	beq $s3, 0, cREnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
