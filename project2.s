@@ -4,7 +4,7 @@
 	sr2: .asciiz "Invalid Input"
 	newLine: .asciiz "\n"
 	userString: .space 1001 #1000 characters
-	uSCount: .word 0
+	charCount: .word 0
 	tempString: .space 1001 
 	
 .text # Instructions section, goes in text segment.
@@ -30,6 +30,7 @@ main:
 	la $s0, userString # message address.
 	jal calcResult
 
+	lw $s0, charCount
 	slt $t0, $s0, 5 # characterCount < 5?
 	beq $t0, 0, printInvalid # characterCount >= 5, invalid.
 	slt $t0, $s0, 1 # characterCount < 1?
@@ -63,11 +64,14 @@ cRLoop:
 	beq $s2, 0, cREnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
-	bgt $s2, $t6, messageLoopEnd # If the number is larger than our base, ignore it.
+	bgt $s2, $t6, cRErrorEnd # If the number is larger than our base, Print an error.
 	add $s5, $s5, $s2 # result += value.
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
 	j cRLoop # Check the next character.
+cRErrorEnd:
+	addi $t7, $zero, -1 # Any error we get sets the character count to -1.
+	sw $t7, charCount
 cREnd:
 	lw $ra, ($sp) # Load the address from the stack.
 	addiu $sp, $sp, 4
@@ -160,6 +164,7 @@ fCLoopEnd:
 	j fCLoop
 fCEnd:
 	addi $s7, $s7, 1 # the number of characters is i+1.
+	sw $s7, charCount # set charCount.
 	jr $ra
 	
 # REMOVE TRAILING SPACES #
