@@ -60,6 +60,7 @@ cRLoop:
 	lb $s2, 0($s1) # Load the character into $s2.
 	beq $s2, 0, cREnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
+	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	bgt $s2, $t6, messageLoopEnd # If the number is larger than our base, ignore it.
 	add $s5, $s5, $s2 # result += value.
 cRLoopEnd:
@@ -68,6 +69,19 @@ cRLoopEnd:
 cREnd:
 	lw $ra, ($sp) # Load the address from the stack.
 	addiu $sp, $sp, 4
+	jr $ra
+	
+# CHECK IF CHAR IN RANGE #
+isCharInRange:
+	blt $s2, 48, cRLoopEnd # Value is less that '0', ignore it.
+	bgt $s2, 90, cRLoopEnd # Value is more than 'Z', ignore it.
+	bgt $s2, 57, checkIfIgnore # Value is more than '9', but it could still be a character.
+	sub $s2, $s2, 48 # The value is between '0' and '9', make it values 0-9.
+	j endCharCheck
+checkIfIgnore:
+	blt $s2, 65, messageLoopEnd # Value is between '9' and 'A', ignore it.
+	sub $s2, $s2, 55 # The value is between 'A' and 'Z', make it values 10-35.
+endCharCheck:
 	jr $ra
 	
 # CONVERT TO UPPERCASE #
