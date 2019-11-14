@@ -27,18 +27,20 @@ main:
 	jal replaceString
 	jal findCharCount
 	jal removeTrailing
-	la $s0, userString # message address.
-	jal calcResult
 
 	lw $s0, charCount
 	slt $t0, $s0, 5 # characterCount < 5?
 	beq $t0, 0, printInvalid # characterCount >= 5, invalid.
+	
+	la $s0, userString # message address.
+	jal calcResult
+	
 	slt $t0, $s0, 1 # characterCount < 1?
 	beq $t0, 1, printInvalid # characterCount < 1, invalid.
 	
 	# PRINT RESULT
 	li $v0, 1 # Printing result
-	add $a0, $zero, $s5 # Set a0 to the result.
+	add $a0, $zero, $s7 # Set a0 to the result.
 	syscall 
 	j endProgram
 	
@@ -61,17 +63,23 @@ calcResult:
 	lw $t1, base # base.
 	lw $t2, charCount # power = charCount. used for calc.
 	addi $t2, $t2, -1 # Our power is one less than charCount.
-	add $s1, $zero, $zero # result = 0.
+	add $s7, $zero, $zero # finalResult = 0.
 cRLoop:
-	blt, $t2, $t0, cREnd
+	blt, $t2, $t0, cREnd # i > charCount, exit out.
 	add $t3, $s0, $t0 # message[i] address.
 	lb $s3, 0($t3) # Character at message[i].
 	beq $s3, 0, cREnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	bgt $s3, $t1, cRErrorEnd # If the number is larger than our base, Print an error.
+	# Calculation
+	add $s4, $zero, $t1 # Base.
+	add $s5, $zero, $t2 # Power.
+	jal powerFunct
+	add $s7, $s3, $s7 # finalResult += powerResult.
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
+	#addi $t2, $t2, -1 # power--
 	j cRLoop # Check the next character.
 cRErrorEnd:
 	addi $t7, $zero, -1 # Any error we get sets the character count to -1.
@@ -84,13 +92,13 @@ cREnd:
 # POWER #
 powerFunct:
 	add $t8, $zero, $zero # i.
-	addi $t8, $t8, 1
-	add $s3, $zero, $s4
+	addi $t8, $t8, 1 # add 1 to i once.
+	add $s6, $zero, $s4 # powerResult = base.
 pFLoop:
-	mult $s3, $s4 # base * base
-	mflo $s3 # Store in s3.
-	addi, $t8, $t8, 1 # i++
-	blt $t8, $s6, pFLoop # iterator is less than the lower, keep looping.
+	mult $s3, $s4 # powerResult * base
+	mflo $s3 # powerResult = powerResult * base.
+	addi, $t8, $t8, 1 # i++.
+	blt $t8, $s5, pFLoop # i < power, keep looping.
 pFEnd:
 	jr $ra
 	
