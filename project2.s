@@ -25,7 +25,7 @@ main:
 	jal removeLeading
 	jal replaceString
 	jal findCharCount
-	#jal removeTrailing
+	jal removeTrailing
 
 	slt $t0, $s0, 5 # characterCount < 5?
 	beq $t0, 0, printInvalid # characterCount >= 5, invalid.
@@ -118,15 +118,13 @@ fCEnd:
 # REMOVE TRAILING SPACES #
 removeTrailing:
 	la $t0, userString # message address.
-	add $s0, $zero, $t8 # characterCount = lastCharacterIndex. Used later.
-	addi $s0, $s0, -1 # lastCharacterIndex ends on a null character, which we don't want to count as a character.
-	add $t2, $zero, $zero # 0, null/the end of a string.
-	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
+	add $t1, $zero, $zero # 0, null/the end of a string.
+	beq $s7, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
 rTLoop:
 	add $t1, $t0, $t8 # message[lastCharacterIndex] address.
 	sb $t2, 0($t1) # message[lastCharacterIndex] = null.
 	addi $t8, $t8, 1 # lastCharacterIndex++.
-	beq $t8, 1002, rTEnd # lastCharacterIndex == 1002, end of string.
+	beq $t8, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
 	j rTLoop
 rTEnd:
 	jr $ra
