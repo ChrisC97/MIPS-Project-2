@@ -59,6 +59,8 @@ calcResult:
 	sw $ra, ($sp) # Save $ra on the stack for when we want to return.
 	add $t0, $zero, $zero # i.
 	lw $t6, base # base.
+	lw $t5, charCount # Power. used for calc.
+	addi $t5, $t5, -1 # Needs to be one less.
 	add $s5, $s5, $zero # result = 0.
 cRLoop:
 	add $s1, $s0, $t0 # mesage[i] address.
@@ -67,6 +69,9 @@ cRLoop:
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	bgt $s2, $t6, cRErrorEnd # If the number is larger than our base, Print an error.
+	add $s0, $zero, $t6 # base.
+	add $s6, $zero, $t5 # power.
+	jal powerFunct
 	add $s5, $s5, $s2 # result += value.
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
@@ -77,7 +82,10 @@ cRErrorEnd:
 cREnd:
 	lw $ra, ($sp) # Load the address from the stack.
 	addiu $sp, $sp, 4
-	jr $ra
+	jr $ra # Return to main method.
+	
+# POWER #
+powerFunct:
 	
 # CHECK IF CHAR IN RANGE #
 isCharInRange:
