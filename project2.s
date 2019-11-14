@@ -176,12 +176,13 @@ fCEnd:
 removeTrailing:
 	la $t0, userString # message address.
 	add $t1, $zero, $zero # 0, null/the end of a string.
-	beq $s7, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
+	lw $t7, charCount # lastCharacterIndex.
+	beq $t7, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
 rTLoop:
-	add $t1, $t0, $t8 # message[lastCharacterIndex] address.
+	add $t1, $t0, $t7 # message[lastCharacterIndex] address.
 	sb $t2, 0($t1) # message[lastCharacterIndex] = null.
-	addi $t8, $t8, 1 # lastCharacterIndex++.
-	beq $t8, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
+	addi $t7, $t7, 1 # lastCharacterIndex++.
+	beq $t7, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
 	j rTLoop
 rTEnd:
 	jr $ra
