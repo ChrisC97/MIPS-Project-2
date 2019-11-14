@@ -55,25 +55,20 @@ endProgram:
 	
 # CALCULATE RESULT #
 calcResult:	
-	addiu $sp, $sp, -4
+	addiu $sp, $sp, -4 # expand stack.
 	sw $ra, ($sp) # Save $ra on the stack for when we want to return.
 	add $t0, $zero, $zero # i.
-	lw $t6, base # base.
-	lw $t5, charCount # Power. used for calc.
-	addi $t5, $t5, -1 # Needs to be one less.
-	add $s5, $s5, $zero # result = 0.
+	lw $t1, base # base.
+	lw $t2, charCount # power = charCount. used for calc.
+	addi $t3, $t3, -1 # Our power is one less than charCount.
+	add $s1, $zero, $zero # result = 0.
 cRLoop:
-	add $s1, $s0, $t0 # mesage[i] address.
-	lb $s2, 0($s1) # Load the character into $s2.
-	beq $s2, 0, cREnd # End of string, exit out.
+	add $s2, $s0, $t0 # message[i] address.
+	lb $s3, 0($s2) # Character at message[i].
+	beq $s3, 0, cREnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
-	bgt $s2, $t6, cRErrorEnd # If the number is larger than our base, Print an error.
-	add $s4, $zero, $t6 # base.
-	add $s6, $zero, $t5 # power.
-	#jal powerFunct
-	#add $s5, $s5, $s3 # result += value.
-	addi $t5, $t5, -1
+	bgt $s3, $t1, cRErrorEnd # If the number is larger than our base, Print an error.
 cRLoopEnd:
 	addi $t0, $t0, 1 # i++
 	j cRLoop # Check the next character.
@@ -100,22 +95,22 @@ pFEnd:
 	
 # CHECK IF CHAR IN RANGE #
 isCharInRange:
-	blt $s2, 48, cRErrorEnd # Value is less that '0', print an error.
-	bgt $s2, 90, cRErrorEnd # Value is more than 'Z', print an error.
-	bgt $s2, 57, checkIfIgnore # Value is more than '9', but it could still be a character.
-	sub $s2, $s2, 48 # The value is between '0' and '9', make it values 0-9.
+	blt $s3, 48, cRErrorEnd # Value is less that '0', print an error.
+	bgt $s3, 90, cRErrorEnd # Value is more than 'Z', print an error.
+	bgt $s3, 57, checkIfIgnore # Value is more than '9', but it could still be a character.
+	sub $s3, $s3, 48 # The value is between '0' and '9', make it values 0-9.
 	j endCharCheck
 checkIfIgnore:
-	blt $s2, 65, cRErrorEnd # Value is between '9' and 'A', print an error.
-	sub $s2, $s2, 55 # The value is between 'A' and 'Z', make it values 10-35.
+	blt $s3, 65, cRErrorEnd # Value is between '9' and 'A', print an error.
+	sub $s3, $s3, 55 # The value is between 'A' and 'Z', make it values 10-35.
 endCharCheck:
 	jr $ra
 	
 # CONVERT TO UPPERCASE #
 toUppercase: # Convert characters to their uppercase version.
-	blt $s2, 'a', toUppercaseEnd  # If less than a, return. No change needed.
-	bgt $s2, 'z', toUppercaseEnd  # If more than z, return. No change needed.
-	sub $s2, $s2, 32  # Lowercase characters are offset from uppercase by 32.
+	blt $s3, 'a', toUppercaseEnd  # If less than a, return. No change needed.
+	bgt $s3, 'z', toUppercaseEnd  # If more than z, return. No change needed.
+	sub $s3, $s3, 32  # Lowercase characters are offset from uppercase by 32.
 toUppercaseEnd:
 	jr $ra
 
