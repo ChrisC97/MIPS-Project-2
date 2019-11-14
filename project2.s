@@ -5,7 +5,7 @@
 	newLine: .asciiz "\n"
 	userString: .space 1001 #1000 characters
 	charCount: .word 0
-	tempString: .space 1001 
+	tempString: .space 1001
 	
 .text # Instructions section, goes in text segment.
 
@@ -35,9 +35,14 @@ main:
 	beq $t0, 0, printInvalid # characterCount >= 5, invalid.
 	slt $t0, $s0, 1 # characterCount < 1?
 	beq $t0, 1, printInvalid # characterCount < 1, invalid.
+	
+	# PRINT RESULT
+	li $v0, 1 # Printing result
+	add $a0, $zero, $s5 # Set a0 to the result.
+	syscall 
 	j endProgram
 	
-	# PRINT INVALID
+	# PRINT INVALID #
 printInvalid:
 	li $v0, 4
 	la $a0, sr2
