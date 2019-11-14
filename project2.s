@@ -24,7 +24,7 @@ main:
 	
 	jal removeLeading
 	jal replaceString
-	jal removeTrailing
+	#jal removeTrailing
 
 	slt $t0, $s0, 5 # characterCount < 5?
 	beq $t0, 0, printInvalid # characterCount >= 5, invalid.
@@ -76,7 +76,6 @@ removeLeading:
 	add $t2, $zero, $zero # i.
 	add $t3, $zero, $zero # h.
 	add $t4, $zero, $zero # hitCharacter. Defaults to false (0).
-	add $t8, $zero, $zero # lastCharacterIndex. Used for remove trailing.
 rLLoop:
 	add $t5, $t0, $t2 # message[i].
 	add $t6, $t1, $t3 # newMessage[h].
@@ -92,10 +91,6 @@ rLLoopOther:
 	sb $t7, 0($t6) # newMessage[h] = message[i]
 	addi $t3, $t3, 1 # h++.
 	addi $t2, $t2, 1 # i++.
-	bne $t7, 32, rLLoopLCIndex # message[i] != ' ', need to keep track of the h position.
-	j rLLoop
-rLLoopLCIndex:
-	add $t8, $zero, $t3 # lastCharacterIndex = h.
 	j rLLoop
 rLLoopEnd:
 	jr $ra # Return to where we were in the main loop.
