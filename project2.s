@@ -1,7 +1,7 @@
 .data
 	base: .word 33
 	sr1: .asciiz "Enter up to 1000 characters: "
-	sr2: .asciiz "Invalid Input"
+	sr2: .asciiz "Invalid input"
 	newLine: .asciiz "\n"
 	userString: .space 1001 #1000 characters
 	charCount: .word 0
@@ -73,6 +73,7 @@ cRLoop:
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	bgt $s3, $t1, cRErrorEnd # If the number is larger than our base, Print an error.
+	beq $s3, $t1, cRErrorEnd # If the number equals our base, print an error.
 	# Calculation
 	add $s4, $zero, $t1 # Base.
 	add $s5, $zero, $t2 # Power.
