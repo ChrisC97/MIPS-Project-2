@@ -51,12 +51,17 @@ endProgram:
 	
 # CALCULATE RESULT #
 calcResult:	
+	addiu $sp, $sp, -4
+	sw $ra, 0($sp) # Save $ra on the stack for when we want to return.
 	add $t0, $t0, $zero # $t0 will iterate over the characters.
 cRLoop:
 	add $s1, $s0, $t0 # mesage[i] address.
 	lb $s2, 0($s1) # Load the character into $s2.
 	beq $s2, 0, cRLoopEnd # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
+cRLoopEnd:
+	lw $ra, 0($sp) # Load the address from the stack.
+	addiu $sp, $sp, 4
 	
 # CONVERT TO UPPERCASE #
 toUppercase: # Convert characters to their uppercase version.
