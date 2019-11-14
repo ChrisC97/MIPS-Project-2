@@ -56,6 +56,15 @@ cRLoop:
 	add $s1, $s0, $t0 # mesage[i] address.
 	lb $s2, 0($s1) # Load the character into $s2.
 	beq $s2, 0, cRLoopEnd # End of string, exit out.
+	jal toUppercase # Convert the character to uppercase. 
+	
+# CONVERT TO UPPERCASE #
+toUppercase: # Convert characters to their uppercase version.
+	blt $s2, 'a', toUppercaseEnd  # If less than a, return. No change needed.
+	bgt $s2, 'z', toUppercaseEnd  # If more than z, return. No change needed.
+	sub $s2, $s2, 32  # Lowercase characters are offset from uppercase by 32.
+toUppercaseEnd:
+	jr $ra
 
 # REPLACE STRING #
 replaceString:
