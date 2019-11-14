@@ -143,7 +143,7 @@ rSLoop:
 	sb $t7, 0($t5) # message[i] = tempMessage[i].
 	sb $zero, 0($t6) # tempMessage[i] = 0
  	addi $t2, $t2, 1 # i++.
-	beq $t2, 1002, rSLoopEnd # i == 1002, end of string.
+	bgt $t2, 1001, rSLoopEnd # i > 1001, end of string.
 	j rSLoop
 rSLoopEnd:
 	jr $ra # Return to where we were in the main loop.
@@ -182,7 +182,7 @@ findCharCount:
 fCLoop:
 	add $t2, $t0, $t1 # message[i].
 	lb $t3, 0($t2) # The character at message[i].
-	beq $t1, 1002, fCEnd # i == 1002, end of string.
+	bgt $t1, 1000, fCEnd # i > 1000, end of string.
 	slt $t4, $t3, 33 # message[i] < '!'?
 	beq $t4, 1, fCLoopEnd # message[i] <= ' ', loop again.
 	add $s7, $zero, $t1 # charCount = i.
@@ -199,12 +199,12 @@ removeTrailing:
 	la $t0, userString # message address.
 	add $t1, $zero, $zero # 0, null/the end of a string.
 	lw $t7, charCount # lastCharacterIndex.
-	beq $t7, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
+	bgt $t7, 1001, rTEnd # lastCharacterIndex > 1001, end of string.
 rTLoop:
 	add $t1, $t0, $t7 # message[lastCharacterIndex] address.
 	sb $t2, 0($t1) # message[lastCharacterIndex] = null.
 	addi $t7, $t7, 1 # lastCharacterIndex++.
-	beq $t7, 1001, rTEnd # lastCharacterIndex == 1001, end of string.
+	bgt $t7, 1001, rTEnd # lastCharacterIndex > 1001, end of string.
 	j rTLoop
 rTEnd:
 	jr $ra
