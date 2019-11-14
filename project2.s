@@ -86,6 +86,10 @@ cREnd:
 	
 # POWER #
 powerFunct:
+	add $t8, $zero, $zero # i.
+	addi $t8, $t8, 1
+pFLoop:
+	mult $s0, $s0 # base * base
 	
 # CHECK IF CHAR IN RANGE #
 isCharInRange:
