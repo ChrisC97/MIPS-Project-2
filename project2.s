@@ -26,6 +26,8 @@ main:
 	jal replaceString
 	jal findCharCount
 	jal removeTrailing
+	la $s0, userString # message address.
+	jal calcResult
 
 	slt $t0, $s0, 5 # characterCount < 5?
 	beq $t0, 0, printInvalid # characterCount >= 5, invalid.
@@ -47,6 +49,9 @@ endProgram:
 	li $v0, 10 # Exit program system call.
 	syscall
 	
+# CALCULATE RESULT #
+calcResult:	
+
 # REPLACE STRING #
 replaceString:
 	la $t0, userString # message address.
